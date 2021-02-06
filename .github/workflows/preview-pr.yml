@@ -1,12 +1,11 @@
 #
 # Build and preview documentation in PRs
+# DOES NOT WORK FOR FORKS.
 #
 name: Preview PR
 
-# Runs for 'pull_request_target', not 'pull_request',
-# so that it also works for PRs from external contributors
 on:
-  pull_request_target:
+  pull_request:
 
 jobs:
   deploy:
@@ -15,13 +14,8 @@ jobs:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.7.0
 
-      # pull_request_target checks out codes in the base repository
-      # so we have to explicitly specify PR head repository and sha
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
-          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -50,6 +44,7 @@ jobs:
           force_orphan: false
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
+        if: github.event.pull_request.head.repo.full_name == github.repository
 
       - name: Find Comment
         uses: peter-evans/find-comment@v1
@@ -58,9 +53,9 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: 'github-actions[bot]'
           body-includes: This comment was written by the Continuous Documentation bot!
+        if: github.event.pull_request.head.repo.full_name == github.repository
 
       - name: Create comment
-        if: steps.fc.outputs.comment-id == 0
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
@@ -69,9 +64,9 @@ jobs:
 
             - **Preview**: https://seismo-learn.org/sitepreview/${{ github.repository }}/${{ github.head_ref }}/index.html
             - **Commit hash**: ${{ github.event.pull_request.head.sha }}
+        if: github.event.pull_request.head.repo.full_name == github.repository && steps.fc.outputs.comment-id == 0
 
       - name: Update comment
-        if: steps.fc.outputs.comment-id != 0
         uses: peter-evans/create-or-update-comment@v1
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
@@ -81,3 +76,4 @@ jobs:
 
             - **Preview**: https://seismo-learn.org/sitepreview/${{ github.repository }}/${{ github.head_ref }}/index.html
             - **Commit hash**: ${{ github.event.pull_request.head.sha }}
+        if: github.event.pull_request.head.repo.full_name == github.repository && steps.fc.outputs.comment-id != 0
