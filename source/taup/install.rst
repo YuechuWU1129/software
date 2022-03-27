@@ -3,7 +3,7 @@
 
 :本节贡献者: |田冬冬|\（作者）、
              |姚家园|\（审稿）
-:最近更新日期: 2021-05-29
+:最近更新日期: 2022-03-27
 
 ----
 
@@ -13,22 +13,26 @@
 
 2.  下载::
 
-        $ wget http://www.seis.sc.edu/downloads/TauP/TauP-2.5.0.tgz
+        $ wget http://www.seis.sc.edu/downloads/TauP/TauP-2.6.0.tgz
 
 3.  解压::
 
-        $ tar -xvf TauP-2.5.0.tgz
+        $ tar -xvf TauP-2.6.0.tgz
 
 4.  将 TauP 安装到 :file:`~/opt` 目录下::
 
         $ mkdir -p ~/opt/
-        $ mv TauP-2.5.0 ~/opt/
+        $ mv TauP-2.6.0 ~/opt/
 
 5.  修改环境变量，将 TauP 的 bin 路径添加到 PATH 中::
 
-        $ echo 'export PATH=${HOME}/opt/TauP-2.5.0/bin:${PATH}' >> ~/.bashrc
+        $ echo 'export PATH=${HOME}/opt/TauP-2.6.0/bin:${PATH}' >> ~/.bashrc
         $ source ~/.bashrc
 
 6.  检查安装是否成功
 
     终端键入 ``taup`` 若出现 TauP 图形界面则表示安装成功。
+    
+或者使用snap直接安装
+
+        $ sudo snap install taup
